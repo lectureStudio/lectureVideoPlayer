@@ -125,7 +125,6 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ### Third‑party Licenses
 Third-party packages are subject to their respective licenses:
-- **pdfjs-dist** (Apache-2.0): [mozilla/pdf.js](https://github.com/mozilla/pdf.js/)
 - **Vue and related tooling** (MIT): [vuejs](https://github.com/vuejs/)
 - **Tailwind CSS** (MIT): [tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss)
 - **DaisyUI** (MIT): [saadeghi/daisyui](https://github.com/saadeghi/daisyui)
