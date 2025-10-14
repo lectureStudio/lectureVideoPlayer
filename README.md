@@ -125,6 +125,13 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ### Third‑party Licenses
 Third-party packages are subject to their respective licenses:
+
+Runtime dependencies:
 - **Vue and related tooling** (MIT): [vuejs](https://github.com/vuejs/)
 - **Tailwind CSS** (MIT): [tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss)
 - **DaisyUI** (MIT): [saadeghi/daisyui](https://github.com/saadeghi/daisyui)
+- **Pinia** (MIT): [vuejs/pinia](https://github.com/vuejs/pinia)
+- **Fluent UI System Icons** (MIT): [microsoft/fluentui-system-icons](https://github.com/microsoft/fluentui-system-icons)
+- **Vue Virtual Scroller** (MIT): [akryum/vue-virtual-scroller](https://github.com/Akryum/vue-virtual-scroller)
+
+Note: Third-party packages are subject to their own licenses; see their repositories for full texts.
