@@ -8,6 +8,7 @@ An easy-to-use player for recorded lectures that brings video together with slid
 - Rich media controls: play/pause, seek, volume, mute, speed control (0.25–2x)
 - Keyboard shortcuts and fullscreen support
 - Theme and layout options (via UI controls)
+- Responsive design: Works on desktop and mobile devices
 
 ## Keyboard Shortcuts
 - **Play/Pause:** Space or K
