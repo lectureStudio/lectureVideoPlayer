@@ -19,7 +19,7 @@ const keyboardShortcutsDialog = ref<{ showShortcutsDialog: () => void } | null>(
   null,
 )
 
-// Handle show shortcuts event from navigation bar
+// Handle show shortcuts event from the navigation bar
 const handleShowShortcuts = () => {
   keyboardShortcutsDialog.value?.showShortcutsDialog()
 }

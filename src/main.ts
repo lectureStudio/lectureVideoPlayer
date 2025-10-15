@@ -8,7 +8,7 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 
 // Create Vue application instance
 const app = createApp(App)
-// Create Pinia store instance
+// Create a Pinia store instance
 const pinia = createPinia()
 
 // Register global components
