@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
 import { useMediaControlsStore } from '@/stores/mediaControls'
+import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('MediaControlsStore', () => {
   let store: ReturnType<typeof useMediaControlsStore>
@@ -9,7 +9,7 @@ describe('MediaControlsStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     store = useMediaControlsStore()
-    
+
     // Create a mock media element
     mockMediaElement = {
       play: vi.fn().mockResolvedValue(undefined),
@@ -64,7 +64,7 @@ describe('MediaControlsStore', () => {
     it('should play media element when attached', async () => {
       store.attachMedia(mockMediaElement)
       await store.play()
-      
+
       expect(mockMediaElement.play).toHaveBeenCalled()
     })
 
@@ -72,9 +72,9 @@ describe('MediaControlsStore', () => {
       const error = new Error('Play failed')
       mockMediaElement.play = vi.fn().mockRejectedValue(error)
       store.attachMedia(mockMediaElement)
-      
+
       await store.play()
-      
+
       expect(store.playbackState).toBe('error')
     })
 
@@ -88,7 +88,7 @@ describe('MediaControlsStore', () => {
     it('should pause media element when attached', () => {
       store.attachMedia(mockMediaElement)
       store.pause()
-      
+
       expect(mockMediaElement.pause).toHaveBeenCalled()
     })
 
@@ -102,18 +102,18 @@ describe('MediaControlsStore', () => {
     it('should play when paused', async () => {
       mockMediaElement.paused = true
       store.attachMedia(mockMediaElement)
-      
+
       await store.togglePlayPause()
-      
+
       expect(mockMediaElement.play).toHaveBeenCalled()
     })
 
     it('should pause when playing', () => {
       mockMediaElement.paused = false
       store.attachMedia(mockMediaElement)
-      
+
       store.togglePlayPause()
-      
+
       expect(mockMediaElement.pause).toHaveBeenCalled()
     })
 
@@ -121,9 +121,9 @@ describe('MediaControlsStore', () => {
       mockMediaElement.paused = false
       mockMediaElement.ended = true
       store.attachMedia(mockMediaElement)
-      
+
       await store.togglePlayPause()
-      
+
       expect(mockMediaElement.play).toHaveBeenCalled()
     })
   })
@@ -132,7 +132,7 @@ describe('MediaControlsStore', () => {
     it('should seek to specified time', () => {
       store.attachMedia(mockMediaElement)
       store.seekTo(5000) // 5 seconds
-      
+
       expect(store.currentTime).toBe(5000)
       expect(mockMediaElement.currentTime).toBe(5)
     })
@@ -140,7 +140,7 @@ describe('MediaControlsStore', () => {
     it('should clamp negative time to 0', () => {
       store.attachMedia(mockMediaElement)
       store.seekTo(-1000)
-      
+
       expect(store.currentTime).toBe(-1000) // The store doesn't clamp, it just sets the value
       expect(mockMediaElement.currentTime).toBe(0) // But the element gets clamped
     })
@@ -148,7 +148,7 @@ describe('MediaControlsStore', () => {
     it('should handle non-finite values', () => {
       store.attachMedia(mockMediaElement)
       store.seekTo(NaN)
-      
+
       expect(store.currentTime).toBe(0) // Unchanged
     })
 
@@ -161,7 +161,7 @@ describe('MediaControlsStore', () => {
   describe('attachMedia', () => {
     it('should attach media element and set up event listeners', () => {
       store.attachMedia(mockMediaElement)
-      
+
       expect(store.mediaEl).toStrictEqual(mockMediaElement)
       expect(mockMediaElement.addEventListener).toHaveBeenCalledWith('timeupdate', expect.any(Function))
       expect(mockMediaElement.addEventListener).toHaveBeenCalledWith('durationchange', expect.any(Function))
@@ -178,9 +178,9 @@ describe('MediaControlsStore', () => {
       store.muted = true
       store.playbackSpeed = 1.5
       store.currentTime = 3000
-      
+
       store.attachMedia(mockMediaElement)
-      
+
       expect(mockMediaElement.volume).toBe(0) // Muted
       expect(mockMediaElement.muted).toBe(true)
       expect(mockMediaElement.playbackRate).toBe(1.5)
@@ -190,10 +190,10 @@ describe('MediaControlsStore', () => {
     it('should detach previous media element', () => {
       const firstElement = { ...mockMediaElement }
       const secondElement = { ...mockMediaElement }
-      
+
       store.attachMedia(firstElement)
       store.attachMedia(secondElement)
-      
+
       expect(store.mediaEl).toStrictEqual(secondElement)
     })
   })
@@ -202,7 +202,7 @@ describe('MediaControlsStore', () => {
     it('should remove event listeners and detach media element', () => {
       store.attachMedia(mockMediaElement)
       store.detachMedia()
-      
+
       expect(mockMediaElement.removeEventListener).toHaveBeenCalled()
       expect(store.mediaEl).toBe(null)
     })
@@ -217,9 +217,9 @@ describe('MediaControlsStore', () => {
     it('should set volume and unmute', () => {
       store.muted = true
       store.attachMedia(mockMediaElement)
-      
+
       store.setVolume(75)
-      
+
       expect(store.volume).toBe(75)
       expect(store.muted).toBe(false)
       expect(store.prevVolume).toBe(75)
@@ -230,7 +230,7 @@ describe('MediaControlsStore', () => {
     it('should clamp volume to valid range', () => {
       store.setVolume(150)
       expect(store.volume).toBe(100)
-      
+
       store.setVolume(-10)
       expect(store.volume).toBe(0)
     })
@@ -238,7 +238,7 @@ describe('MediaControlsStore', () => {
     it('should update prevVolume for non-zero values', () => {
       store.setVolume(50)
       expect(store.prevVolume).toBe(50)
-      
+
       store.setVolume(0)
       expect(store.prevVolume).toBe(50) // Unchanged
     })
@@ -249,9 +249,9 @@ describe('MediaControlsStore', () => {
       store.volume = 75
       store.muted = false
       store.attachMedia(mockMediaElement)
-      
+
       store.toggleMute()
-      
+
       expect(store.muted).toBe(true)
       expect(store.prevVolume).toBe(75)
       expect(mockMediaElement.muted).toBe(true)
@@ -262,9 +262,9 @@ describe('MediaControlsStore', () => {
       store.muted = true
       store.prevVolume = 80
       store.attachMedia(mockMediaElement)
-      
+
       store.toggleMute()
-      
+
       expect(store.muted).toBe(false)
       expect(store.volume).toBe(80)
       expect(mockMediaElement.muted).toBe(false)
@@ -276,9 +276,9 @@ describe('MediaControlsStore', () => {
       store.muted = true
       store.prevVolume = 0
       store.attachMedia(mockMediaElement)
-      
+
       store.toggleMute()
-      
+
       expect(store.volume).toBe(60)
     })
 
@@ -287,9 +287,9 @@ describe('MediaControlsStore', () => {
       store.muted = true
       store.prevVolume = 0
       store.attachMedia(mockMediaElement)
-      
+
       store.toggleMute()
-      
+
       expect(store.volume).toBe(50)
     })
   })
@@ -297,7 +297,7 @@ describe('MediaControlsStore', () => {
   describe('setPlaybackSpeed', () => {
     it('should set playback speed within valid range', () => {
       store.attachMedia(mockMediaElement)
-      
+
       store.setPlaybackSpeed(1.5)
       expect(store.playbackSpeed).toBe(1.5)
       expect(mockMediaElement.playbackRate).toBe(1.5)
@@ -306,7 +306,7 @@ describe('MediaControlsStore', () => {
     it('should clamp speed to valid range', () => {
       store.setPlaybackSpeed(5.0)
       expect(store.playbackSpeed).toBe(2.0)
-      
+
       store.setPlaybackSpeed(0.1)
       expect(store.playbackSpeed).toBe(0.25)
     })
@@ -316,7 +316,7 @@ describe('MediaControlsStore', () => {
     it('should set seeking state', () => {
       store.startSeeking()
       expect(store.seeking).toBe(true)
-      
+
       store.stopSeeking()
       expect(store.seeking).toBe(false)
     })
@@ -324,9 +324,9 @@ describe('MediaControlsStore', () => {
     it('should sync current time after seeking', () => {
       mockMediaElement.currentTime = 5.5
       store.attachMedia(mockMediaElement)
-      
+
       store.stopSeeking()
-      
+
       expect(store.currentTime).toBe(5500)
     })
   })
@@ -378,7 +378,7 @@ describe('MediaControlsStore', () => {
       const result = store.nextPage()
       expect(result).toBe(false)
       expect(store.currentPage).toBe(5) // Unchanged
-      
+
       store.currentPage = 1
       const result2 = store.prevPage()
       expect(result2).toBe(false)
@@ -398,7 +398,7 @@ describe('MediaControlsStore', () => {
 
     beforeEach(() => {
       store.attachMedia(mockMediaElement)
-      
+
       // Extract event listeners from the mock
       const calls = (mockMediaElement.addEventListener as ReturnType<typeof vi.fn>).mock.calls
       onTimeUpdate = calls.find(([event]) => event === 'timeupdate')?.[1]
@@ -414,9 +414,9 @@ describe('MediaControlsStore', () => {
     it('should update current time on timeupdate', () => {
       store.seeking = false
       mockMediaElement.currentTime = 2.5
-      
+
       onTimeUpdate!()
-      
+
       expect(store.currentTime).toBe(2500)
     })
 
@@ -424,25 +424,25 @@ describe('MediaControlsStore', () => {
       store.seeking = true
       store.currentTime = 1000
       mockMediaElement.currentTime = 2.5
-      
+
       onTimeUpdate!()
-      
+
       expect(store.currentTime).toBe(1000) // Unchanged
     })
 
     it('should update total time on durationchange', () => {
       mockMediaElement.duration = 120.5
-      
+
       onDurationChange!()
-      
+
       expect(store.totalTime).toBe(120500)
     })
 
     it('should handle infinite duration', () => {
       mockMediaElement.duration = Infinity
-      
+
       onDurationChange!()
-      
+
       expect(store.totalTime).toBe(0)
     })
 
@@ -471,18 +471,18 @@ describe('MediaControlsStore', () => {
       mockMediaElement.muted = false
       store.volume = 50
       store.muted = false
-      
+
       onVolumeChange!()
-      
+
       expect(store.volume).toBe(60)
       expect(store.muted).toBe(false)
     })
 
     it('should update playback speed on ratechange', () => {
       mockMediaElement.playbackRate = 1.5
-      
+
       onRateChange!()
-      
+
       expect(store.playbackSpeed).toBe(1.5)
     })
   })

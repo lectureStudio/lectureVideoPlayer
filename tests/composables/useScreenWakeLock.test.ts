@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
 import { useScreenWakeLock } from '@/composables/useScreenWakeLock'
+import { mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('useScreenWakeLock', () => {
   let mockWakeLock: {
@@ -18,7 +18,7 @@ describe('useScreenWakeLock', () => {
         composableResult = useScreenWakeLock()
         return composableResult
       },
-      template: '<div></div>'
+      template: '<div></div>',
     })
     return { wrapper, composable: composableResult! }
   }
@@ -34,7 +34,8 @@ describe('useScreenWakeLock', () => {
     // Delete existing property if it exists
     try {
       delete (navigator as typeof navigator & { wakeLock?: unknown }).wakeLock
-    } catch (_e) {
+    }
+    catch (_e) {
       // Ignore errors
     }
 
@@ -62,9 +63,9 @@ describe('useScreenWakeLock', () => {
     it('should check for wake lock support on mount', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       expect(composable.isSupported.value).toBe(true)
-      
+
       wrapper.unmount()
     })
 
@@ -74,9 +75,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       expect(composable.isSupported.value).toBe(false)
-      
+
       wrapper.unmount()
     })
 
@@ -86,9 +87,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       expect(composable.isSupported.value).toBe(false)
-      
+
       wrapper.unmount()
     })
   })
@@ -104,9 +105,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, isActive } = composable
-      
+
       const result = await requestWakeLock()
 
       expect(result).toBe(true)
@@ -121,13 +122,13 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock } = composable
-      
+
       const result = await requestWakeLock()
 
       expect(result).toBe(false)
-      
+
       wrapper.unmount()
     })
 
@@ -141,12 +142,12 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock } = composable
-      
+
       // Request first time
       await requestWakeLock()
-      
+
       // Request second time
       const result = await requestWakeLock()
 
@@ -161,15 +162,15 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, isActive } = composable
-      
+
       const result = await requestWakeLock()
 
       expect(result).toBe(false)
       expect(isActive.value).toBe(false)
       expect(consoleSpy).toHaveBeenCalledWith('Failed to request wake lock:', error)
-      
+
       consoleSpy.mockRestore()
     })
 
@@ -183,17 +184,17 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, isActive } = composable
-      
+
       await requestWakeLock()
       expect(isActive.value).toBe(true)
 
       // Simulate release event
       const releaseHandler = mockSentinel.addEventListener.mock.calls.find(
-        call => call[0] === 'release'
+        call => call[0] === 'release',
       )?.[1]
-      
+
       releaseHandler?.()
 
       expect(isActive.value).toBe(false)
@@ -211,9 +212,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, releaseWakeLock, isActive } = composable
-      
+
       await requestWakeLock()
       expect(isActive.value).toBe(true)
 
@@ -226,9 +227,9 @@ describe('useScreenWakeLock', () => {
     it('should handle release when no wake lock is active', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { releaseWakeLock } = composable
-      
+
       // Should not throw
       await expect(releaseWakeLock()).resolves.toBeUndefined()
     })
@@ -244,14 +245,14 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, releaseWakeLock } = composable
-      
+
       await requestWakeLock()
       await releaseWakeLock()
 
       expect(consoleSpy).toHaveBeenCalledWith('Failed to release wake lock:', expect.any(Error))
-      
+
       consoleSpy.mockRestore()
     })
   })
@@ -267,9 +268,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, handleVisibilityChange, isActive } = composable
-      
+
       await requestWakeLock()
       expect(isActive.value).toBe(true)
 
@@ -295,9 +296,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { handleVisibilityChange, isActive } = composable
-      
+
       // Simulate page becoming visible
       Object.defineProperty(document, 'hidden', {
         writable: true,
@@ -313,9 +314,9 @@ describe('useScreenWakeLock', () => {
     it('should not request wake lock when page becomes visible but should not be active', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { handleVisibilityChange } = composable
-      
+
       // Simulate page becoming visible
       Object.defineProperty(document, 'hidden', {
         writable: true,
@@ -337,12 +338,12 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, handleVisibilityChange } = composable
-      
+
       // Make it active first
       await requestWakeLock()
-      
+
       // Simulate page becoming visible
       Object.defineProperty(document, 'hidden', {
         writable: true,
@@ -360,9 +361,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { handleVisibilityChange } = composable
-      
+
       await handleVisibilityChange(true)
 
       // mockWakeLock.request won't be called because wakeLock is not supported
@@ -381,9 +382,9 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock } = composable
-      
+
       await requestWakeLock()
 
       // We can't easily test the actual unmount behavior without Vue's lifecycle
@@ -404,14 +405,14 @@ describe('useScreenWakeLock', () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
 
-      const { 
-        isSupported, 
-        isActive, 
-        requestWakeLock, 
-        releaseWakeLock, 
-        handleVisibilityChange 
+      const {
+        isSupported,
+        isActive,
+        requestWakeLock,
+        releaseWakeLock,
+        handleVisibilityChange,
       } = composable
-      
+
       // Initial state
       expect(isSupported.value).toBe(true)
       expect(isActive.value).toBe(false)
@@ -452,17 +453,17 @@ describe('useScreenWakeLock', () => {
 
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       const { requestWakeLock, isActive } = composable
-      
+
       await requestWakeLock()
       expect(isActive.value).toBe(true)
 
       // Simulate system releasing the wake lock
       const releaseHandler = mockSentinel.addEventListener.mock.calls.find(
-        call => call[0] === 'release'
+        call => call[0] === 'release',
       )?.[1]
-      
+
       releaseHandler?.()
 
       expect(isActive.value).toBe(false)

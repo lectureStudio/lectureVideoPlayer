@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
-import { ref } from 'vue'
 import VideoView from '@/components/VideoView.vue'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 // Mock the stores
 vi.mock('@/stores/contentStore', () => ({
@@ -22,13 +22,17 @@ describe('VideoView', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    
+
     // Create reactive ref for videoSource
     const videoSource = ref('/test-video.mp4')
-    
+
     mockContentStore = {
-      get videoSource() { return videoSource.value },
-      set videoSource(value: string) { videoSource.value = value },
+      get videoSource() {
+        return videoSource.value
+      },
+      set videoSource(value: string) {
+        videoSource.value = value
+      },
     } as unknown as ReturnType<typeof useContentStore>
 
     mockMediaStore = {
@@ -184,7 +188,7 @@ describe('VideoView', () => {
       })
 
       const wrapper = mount(VideoView)
-      
+
       // The component will throw because it doesn't have error handling
       expect(() => {
         wrapper.unmount()

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
 import { useContentStore } from '@/stores/contentStore'
 import { useMediaControlsStore } from '@/stores/mediaControls'
+import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the media controls store
 vi.mock('@/stores/mediaControls', () => ({
@@ -18,7 +18,7 @@ describe('ContentStore', () => {
     setActivePinia(createPinia())
     store = useContentStore()
     mockMediaStore = useMediaControlsStore() as ReturnType<typeof useMediaControlsStore>
-    
+
     // Reset mocks
     vi.clearAllMocks()
   })
@@ -99,7 +99,7 @@ describe('ContentStore', () => {
     it('should handle null/undefined values', () => {
       store.setMatchesTotal(null as unknown as number)
       expect(store.matchesTotal).toBe(0)
-      
+
       store.setMatchesTotal(undefined as unknown as number)
       expect(store.matchesTotal).toBe(0)
     })
@@ -114,7 +114,7 @@ describe('ContentStore', () => {
     it('should handle null/undefined values', () => {
       store.setMatchesCurrent(null as unknown as number)
       expect(store.matchesCurrent).toBe(0)
-      
+
       store.setMatchesCurrent(undefined as unknown as number)
       expect(store.matchesCurrent).toBe(0)
     })
@@ -139,7 +139,7 @@ describe('ContentStore', () => {
 
     it('should find matching pages', () => {
       store.search('hello')
-      
+
       expect(store.lastQuery).toBe('hello')
       expect(store.searchMatches).toEqual([0, 3]) // Indices of pages containing "hello"
       expect(store.matchesTotal).toBe(2)
@@ -149,14 +149,14 @@ describe('ContentStore', () => {
 
     it('should be case insensitive', () => {
       store.search('HELLO')
-      
+
       expect(store.searchMatches).toEqual([0, 3])
       expect(store.matchesTotal).toBe(2)
     })
 
     it('should handle no matches', () => {
       store.search('nonexistent')
-      
+
       expect(store.lastQuery).toBe('nonexistent')
       expect(store.searchMatches).toEqual([])
       expect(store.matchesTotal).toBe(0)
@@ -166,7 +166,7 @@ describe('ContentStore', () => {
 
     it('should seek to first match when found', () => {
       store.search('test')
-      
+
       // The search should call seekToMatch which calls seekTo
       // But we need to set up the pageModel properly first
       expect(store.matchesTotal).toBe(2)
@@ -193,7 +193,7 @@ describe('ContentStore', () => {
 
     it('should not clear state when already empty', () => {
       store.cancelSearch()
-      
+
       // State should remain unchanged
       expect(store.lastQuery).toBe('')
       expect(store.matchesTotal).toBe(0)
@@ -212,7 +212,7 @@ describe('ContentStore', () => {
 
     it('should move to next match', () => {
       store.findNext()
-      
+
       expect(store.currentMatchIndex).toBe(1)
       expect(store.matchesCurrent).toBe(2)
       // The seekToMatch function should be called, but we need to set up pageModel
@@ -222,9 +222,9 @@ describe('ContentStore', () => {
     it('should wrap around to first match', () => {
       store.currentMatchIndex = 2 // Last match
       store.matchesCurrent = 3
-      
+
       store.findNext()
-      
+
       expect(store.currentMatchIndex).toBe(0)
       expect(store.matchesCurrent).toBe(1)
     })
@@ -232,7 +232,7 @@ describe('ContentStore', () => {
     it('should not work without active search', () => {
       store.lastQuery = ''
       store.findNext()
-      
+
       expect(store.currentMatchIndex).toBe(0) // Unchanged
     })
   })
@@ -248,7 +248,7 @@ describe('ContentStore', () => {
 
     it('should move to previous match', () => {
       store.findPrev()
-      
+
       expect(store.currentMatchIndex).toBe(0)
       expect(store.matchesCurrent).toBe(1)
       // The seekToMatch function should be called, but we need to set up pageModel
@@ -258,9 +258,9 @@ describe('ContentStore', () => {
     it('should wrap around to last match', () => {
       store.currentMatchIndex = 0 // First match
       store.matchesCurrent = 1
-      
+
       store.findPrev()
-      
+
       expect(store.currentMatchIndex).toBe(2)
       expect(store.matchesCurrent).toBe(3)
     })
@@ -268,7 +268,7 @@ describe('ContentStore', () => {
     it('should not work without active search', () => {
       store.lastQuery = ''
       store.findPrev()
-      
+
       expect(store.currentMatchIndex).toBe(1) // Unchanged
     })
   })
@@ -285,7 +285,7 @@ describe('ContentStore', () => {
     it('should seek to current match', () => {
       store.currentMatchIndex = 1
       store.seekToMatch()
-      
+
       // The seekToMatch function should call seekTo with the timestamp
       // from the pageModel at the current match index
       expect(store.searchMatches[1]).toBe(1) // Second match is at index 1
@@ -294,14 +294,14 @@ describe('ContentStore', () => {
     it('should handle invalid match index', () => {
       store.currentMatchIndex = -1
       store.seekToMatch()
-      
+
       expect(mockMediaStore.seekTo).not.toHaveBeenCalled()
     })
 
     it('should handle out of bounds match index', () => {
       store.currentMatchIndex = 5
       store.seekToMatch()
-      
+
       expect(mockMediaStore.seekTo).not.toHaveBeenCalled()
     })
   })

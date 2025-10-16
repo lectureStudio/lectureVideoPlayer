@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
 import { usePlayerControls } from '@/composables/usePlayerControls'
 import { useContentStore } from '@/stores/contentStore'
 import { useMediaControlsStore } from '@/stores/mediaControls'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the stores
 vi.mock('@/stores/contentStore')
@@ -15,7 +15,7 @@ describe('usePlayerControls', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    
+
     // Create mock store instances
     mockContentStore = {
       pageModel: [

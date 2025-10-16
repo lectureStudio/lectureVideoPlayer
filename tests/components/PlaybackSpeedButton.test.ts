@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
-import { ref } from 'vue'
 import PlaybackSpeedButton from '@/components/PlaybackSpeedButton.vue'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 // Mock the media controls store
 vi.mock('@/stores/mediaControls', () => ({
@@ -18,13 +18,17 @@ describe('PlaybackSpeedButton', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    
+
     // Create reactive ref for playbackSpeed
     const playbackSpeed = ref(1.0)
-    
+
     mockMediaStore = {
-      get playbackSpeed() { return playbackSpeed.value },
-      set playbackSpeed(value: number) { playbackSpeed.value = value },
+      get playbackSpeed() {
+        return playbackSpeed.value
+      },
+      set playbackSpeed(value: number) {
+        playbackSpeed.value = value
+      },
       setPlaybackSpeed: vi.fn((speed: number) => {
         playbackSpeed.value = speed
       }),
@@ -75,16 +79,14 @@ describe('PlaybackSpeedButton', () => {
 
       const speedItems = wrapper.findAll('.step')
       const labels = speedItems.map(item => item.text().trim())
-      
+
       expect(labels).toEqual(['0.25x', '0.5x', '0.75x', 'normal', '1.25x', '1.5x', '1.75x', '2x'])
     })
 
     it('should show "normal" for 1.0x speed', () => {
       const wrapper = mountComponent()
 
-      const normalItem = wrapper.findAll('.step').find(item => 
-        item.text().includes('normal')
-      )
+      const normalItem = wrapper.findAll('.step').find(item => item.text().includes('normal'))
       expect(normalItem).toBeDefined()
     })
   })
@@ -95,15 +97,15 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      
+
       // First 5 items (0.25, 0.5, 0.75, 1.0, 1.25) should be highlighted
       for (let i = 0; i < 5; i++) {
         expect(speedItems[i]?.classes()).toContain('step-primary')
       }
-      
+
       // Item 5 (1.5) should be highlighted (current speed)
       expect(speedItems[5]?.classes()).toContain('step-primary')
-      
+
       // Last 2 items (1.75, 2.0) should not be highlighted
       for (let i = 6; i < 8; i++) {
         expect(speedItems[i]?.classes()).not.toContain('step-primary')
@@ -115,7 +117,7 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      
+
       // All items should be highlighted
       speedItems.forEach(item => {
         expect(item.classes()).toContain('step-primary')
@@ -127,10 +129,10 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      
+
       // Only first item should be highlighted
       expect(speedItems[0]?.classes()).toContain('step-primary')
-      
+
       // Rest should not be highlighted
       for (let i = 1; i < 8; i++) {
         expect(speedItems[i]?.classes()).not.toContain('step-primary')
@@ -142,12 +144,12 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      
+
       // First 3 items (0.25, 0.5, 0.75) should be highlighted
       for (let i = 0; i < 3; i++) {
         expect(speedItems[i]?.classes()).toContain('step-primary')
       }
-      
+
       // Rest should not be highlighted
       for (let i = 3; i < 8; i++) {
         expect(speedItems[i]?.classes()).not.toContain('step-primary')
@@ -169,7 +171,7 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      
+
       // Test clicking different speeds
       await speedItems[0].trigger('click') // 0.25x
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(0.25)
@@ -207,7 +209,7 @@ describe('PlaybackSpeedButton', () => {
       testCases.forEach(({ speed, expectedIndex }) => {
         mockMediaStore.playbackSpeed = speed
         const wrapper = mountComponent()
-        
+
         // The currentIndex computed property should be used to determine highlighting
         const speedItems = wrapper.findAll('.step')
         for (let i = 0; i <= expectedIndex; i++) {

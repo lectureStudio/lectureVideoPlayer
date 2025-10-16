@@ -1,6 +1,6 @@
+import { base64ToUtf8 } from '@/utils/text'
 import { defineStore } from 'pinia'
 import { useMediaControlsStore } from './mediaControls'
-import { base64ToUtf8 } from '@/utils/text'
 
 type PageModelEncoded = {
   time: number
@@ -21,7 +21,6 @@ const isDev = import.meta.env.DEV
 const videoSource = isDev ? '/dev.mp4' : '#{videoSourcePath}'
 const pageModelDataPath = isDev ? '/dev.data' : ''
 const pageModelData = isDev ? '' : '#{pageModelData}'
-
 
 export const useContentStore = defineStore('content', {
   state: () => ({

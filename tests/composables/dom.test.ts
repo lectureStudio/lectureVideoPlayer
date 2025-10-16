@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { sumParentsBoxModel, parsePx } from '@/composables/dom'
+import { parsePx, sumParentsBoxModel } from '@/composables/dom'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('dom utilities', () => {
   describe('sumParentsBoxModel', () => {
