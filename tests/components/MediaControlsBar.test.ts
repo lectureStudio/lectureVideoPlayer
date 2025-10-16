@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
-import { ref } from 'vue'
 import MediaControlsBar from '@/components/MediaControlsBar.vue'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 // Mock the dependencies
 vi.mock('@/stores/mediaControls', () => ({
@@ -66,10 +66,10 @@ vi.mock('@/components/SidebarPositionChooser.vue', () => ({
   },
 }))
 
-import { useMediaControlsStore } from '@/stores/mediaControls'
 import { useFullscreenControls } from '@/composables/useFullscreenControls'
 import { usePlayerControls } from '@/composables/usePlayerControls'
 import { useTimeFormat } from '@/composables/useTimeFormat'
+import { useMediaControlsStore } from '@/stores/mediaControls'
 
 describe('MediaControlsBar', () => {
   let mockMediaStore: ReturnType<typeof useMediaControlsStore>
@@ -79,19 +79,31 @@ describe('MediaControlsBar', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    
+
     // Create reactive refs for store properties
     const currentTime = ref(30000) // 30 seconds
     const totalTime = ref(120000) // 2 minutes
     const playbackState = ref('playing')
-    
+
     mockMediaStore = {
-      get currentTime() { return currentTime.value },
-      set currentTime(value: number) { currentTime.value = value },
-      get totalTime() { return totalTime.value },
-      set totalTime(value: number) { totalTime.value = value },
-      get playbackState() { return playbackState.value },
-      set playbackState(value: string) { playbackState.value = value },
+      get currentTime() {
+        return currentTime.value
+      },
+      set currentTime(value: number) {
+        currentTime.value = value
+      },
+      get totalTime() {
+        return totalTime.value
+      },
+      set totalTime(value: number) {
+        totalTime.value = value
+      },
+      get playbackState() {
+        return playbackState.value
+      },
+      set playbackState(value: string) {
+        playbackState.value = value
+      },
       startSeeking: vi.fn(),
       stopSeeking: vi.fn(),
       seekTo: vi.fn(),
@@ -352,7 +364,7 @@ describe('MediaControlsBar', () => {
       const tooltipFormatter = rangeSlider.props('tooltipFormatter')
 
       expect(typeof tooltipFormatter).toBe('function')
-      
+
       // Test the formatter
       const result = tooltipFormatter(500) // 50% of 1000
       expect(result).toBe('1:00') // 50% of 2 minutes

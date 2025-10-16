@@ -1,6 +1,6 @@
+import AppIcon from '@/components/AppIcon.vue'
 import { config } from '@vue/test-utils'
 import { vi } from 'vitest'
-import AppIcon from '@/components/AppIcon.vue'
 
 // Mock global objects that might not be available in jsdom
 Object.defineProperty(window, 'matchMedia', {

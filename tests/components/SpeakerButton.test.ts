@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
-import { ref } from 'vue'
 import SpeakerButton from '@/components/SpeakerButton.vue'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 // Mock the media controls store
 vi.mock('@/stores/mediaControls', () => ({
@@ -28,16 +28,24 @@ describe('SpeakerButton', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    
+
     // Create reactive refs for store properties
     const volume = ref(50)
     const effectiveVolume = ref(50)
-    
+
     mockMediaStore = {
-      get volume() { return volume.value },
-      set volume(value: number) { volume.value = value },
-      get effectiveVolume() { return effectiveVolume.value },
-      set effectiveVolume(value: number) { effectiveVolume.value = value },
+      get volume() {
+        return volume.value
+      },
+      set volume(value: number) {
+        volume.value = value
+      },
+      get effectiveVolume() {
+        return effectiveVolume.value
+      },
+      set effectiveVolume(value: number) {
+        effectiveVolume.value = value
+      },
       setVolume: vi.fn((vol: number) => {
         volume.value = vol
       }),
@@ -55,14 +63,14 @@ describe('SpeakerButton', () => {
   describe('rendering', () => {
     it('should render speaker button with correct structure', () => {
       const wrapper = mountComponent()
-      
+
       // Check if component mounted at all
       expect(wrapper.exists()).toBe(true)
-      
+
       // Check basic structure
       expect(wrapper.find('.dropdown').exists()).toBe(true)
       expect(wrapper.find('[role="button"]').exists()).toBe(true)
-      
+
       // Check for AppIcon - it should render as a div with inline-flex class
       const appIconDiv = wrapper.find('.inline-flex')
       expect(appIconDiv.exists()).toBe(true)

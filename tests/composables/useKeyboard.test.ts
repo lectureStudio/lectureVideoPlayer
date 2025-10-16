@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ref } from 'vue'
+import { type KeyBinding, useKeyboard } from '@/composables/useKeyboard'
 import { mount } from '@vue/test-utils'
-import { useKeyboard, type KeyBinding } from '@/composables/useKeyboard'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 describe('useKeyboard', () => {
   let mockAddEventListener: ReturnType<typeof vi.fn>
@@ -15,7 +15,7 @@ describe('useKeyboard', () => {
       setup() {
         return useKeyboard(bindings)
       },
-      template: '<div></div>'
+      template: '<div></div>',
     })
   }
 
@@ -51,7 +51,7 @@ describe('useKeyboard', () => {
       await wrapper.vm.$nextTick()
 
       expect(mockAddEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), { capture: false })
-      
+
       wrapper.unmount()
     })
 
@@ -69,7 +69,7 @@ describe('useKeyboard', () => {
           const { enabled } = useKeyboard(bindings)
           return { enabled }
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -110,7 +110,7 @@ describe('useKeyboard', () => {
       expect(handler).toHaveBeenCalledWith(mockEvent)
       expect(mockPreventDefault).toHaveBeenCalled()
       expect(mockStopPropagation).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -139,7 +139,7 @@ describe('useKeyboard', () => {
       expect(handler).not.toHaveBeenCalled()
       expect(mockPreventDefault).not.toHaveBeenCalled()
       expect(mockStopPropagation).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -172,7 +172,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -203,7 +203,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -307,7 +307,7 @@ describe('useKeyboard', () => {
 
       eventListener(mockEventAllowRepeat)
       expect(handlerAllowRepeat).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -339,7 +339,7 @@ describe('useKeyboard', () => {
 
       expect(condition).toHaveBeenCalled()
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -369,7 +369,7 @@ describe('useKeyboard', () => {
 
       expect(condition).toHaveBeenCalled()
       expect(handler).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -389,7 +389,7 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { enabled })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -405,7 +405,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -423,7 +423,7 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { enabled })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -439,7 +439,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -469,7 +469,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -486,7 +486,7 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { ignoreEditable: false })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -503,7 +503,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -531,7 +531,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -551,7 +551,7 @@ describe('useKeyboard', () => {
       const contentEditableElement = document.createElement('div')
       Object.defineProperty(contentEditableElement, 'isContentEditable', {
         value: true,
-        writable: false
+        writable: false,
       })
       const mockEvent = {
         key: 'a',
@@ -563,7 +563,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -583,7 +583,7 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { onlyWhenTargetInside: scopedElement })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -600,7 +600,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
 
@@ -609,7 +609,7 @@ describe('useKeyboard', () => {
       const scopedElement = document.createElement('div')
       const childElement = document.createElement('span')
       scopedElement.appendChild(childElement)
-      
+
       const bindings: KeyBinding[] = [
         {
           keys: { key: 'a' },
@@ -621,7 +621,7 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { onlyWhenTargetInside: scopedElement })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
@@ -637,7 +637,7 @@ describe('useKeyboard', () => {
       eventListener(mockEvent)
 
       expect(handler).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -674,7 +674,7 @@ describe('useKeyboard', () => {
 
       expect(handler2).toHaveBeenCalled() // Higher priority
       expect(handler1).not.toHaveBeenCalled() // Lower priority
-      
+
       wrapper.unmount()
     })
   })
@@ -705,7 +705,7 @@ describe('useKeyboard', () => {
       expect(handler).toHaveBeenCalled()
       expect(mockPreventDefault).not.toHaveBeenCalled()
       expect(mockStopPropagation).not.toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -724,13 +724,13 @@ describe('useKeyboard', () => {
         setup() {
           return useKeyboard(bindings, { capture: true })
         },
-        template: '<div></div>'
+        template: '<div></div>',
       })
 
       await wrapper.vm.$nextTick()
 
       expect(mockAddEventListener).toHaveBeenCalledWith('keydown', expect.any(Function), { capture: true })
-      
+
       wrapper.unmount()
     })
   })

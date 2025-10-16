@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
 import { useFullscreenControls } from '@/composables/useFullscreenControls'
+import { mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the fullscreen utilities
 vi.mock('@/utils/fullscreen', () => ({
@@ -18,7 +18,7 @@ const createTestComponent = () => {
       composableResult = useFullscreenControls()
       return composableResult
     },
-    template: '<div></div>'
+    template: '<div></div>',
   })
   return { wrapper, composable: composableResult! }
 }
@@ -104,7 +104,7 @@ describe('useFullscreenControls', () => {
       await wrapper.vm.$nextTick()
 
       expect(mockAddEventListener).toHaveBeenCalledWith('fullscreenchange', expect.any(Function))
-      
+
       wrapper.unmount()
     })
 
@@ -112,13 +112,13 @@ describe('useFullscreenControls', () => {
       const { wrapper: wrapper1 } = createTestComponent()
       const { wrapper: wrapper2 } = createTestComponent()
       const { wrapper: wrapper3 } = createTestComponent()
-      
+
       await wrapper1.vm.$nextTick()
       await wrapper2.vm.$nextTick()
       await wrapper3.vm.$nextTick()
 
       expect(mockAddEventListener).toHaveBeenCalledTimes(1)
-      
+
       wrapper1.unmount()
       wrapper2.unmount()
       wrapper3.unmount()
@@ -174,50 +174,50 @@ describe('useFullscreenControls', () => {
     it('should update fullscreen state when entering fullscreen', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Simulate fullscreen change event
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       expect(composable.fullscreen.value).toBe(true)
-      
+
       wrapper.unmount()
     })
 
     it('should update fullscreen state when exiting fullscreen', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Simulate fullscreen change event
       document.fullscreenElement = null
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       expect(composable.fullscreen.value).toBe(false)
-      
+
       wrapper.unmount()
     })
 
     it('should handle manual state changes', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Simulate manual state change
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(true)
 
       expect(composable.fullscreen.value).toBe(true)
-      
+
       wrapper.unmount()
     })
   })
@@ -226,30 +226,30 @@ describe('useFullscreenControls', () => {
     it('should show controls when entering fullscreen', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Simulate entering fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       expect(composable.controlsVisible.value).toBe(true)
-      
+
       wrapper.unmount()
     })
 
     it('should hide controls after timeout in fullscreen', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       // Simulate timeout
@@ -257,22 +257,22 @@ describe('useFullscreenControls', () => {
       timeoutCallback?.()
 
       expect(composable.controlsVisible.value).toBe(false)
-      
+
       wrapper.unmount()
     })
 
     it('should show controls on user activity', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen and hide controls
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
-      
+
       // Hide controls
       const timeoutCallback = mockSetTimeout.mock.calls[0]?.[0]
       timeoutCallback?.()
@@ -282,33 +282,33 @@ describe('useFullscreenControls', () => {
       composable.onUserActivity()
 
       expect(composable.controlsVisible.value).toBe(true)
-      
+
       wrapper.unmount()
     })
 
     it('should not hide controls when not in fullscreen', async () => {
       const { wrapper, composable } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Simulate timeout when not in fullscreen
       const timeoutCallback = mockSetTimeout.mock.calls[0]?.[0]
       timeoutCallback?.()
 
       expect(composable.controlsVisible.value).toBe(true) // Should remain visible
-      
+
       wrapper.unmount()
     })
 
     it('should clear timeout when exiting fullscreen', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       // Exit fullscreen
@@ -316,7 +316,7 @@ describe('useFullscreenControls', () => {
       eventListener?.(new Event('fullscreenchange'))
 
       expect(mockClearTimeout).toHaveBeenCalled()
-      
+
       wrapper.unmount()
     })
   })
@@ -325,33 +325,33 @@ describe('useFullscreenControls', () => {
     it('should attach activity listeners when entering fullscreen', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       // Should have attached activity listeners to window
       expect(mockAddEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function), { passive: true })
       expect(mockAddEventListener).toHaveBeenCalledWith('mousedown', expect.any(Function), { passive: true })
       expect(mockAddEventListener).toHaveBeenCalledWith('touchstart', expect.any(Function), { passive: true })
-      
+
       wrapper.unmount()
     })
 
     it('should detach activity listeners when exiting fullscreen', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       // Exit fullscreen
@@ -362,29 +362,29 @@ describe('useFullscreenControls', () => {
       expect(mockRemoveEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function))
       expect(mockRemoveEventListener).toHaveBeenCalledWith('mousedown', expect.any(Function))
       expect(mockRemoveEventListener).toHaveBeenCalledWith('touchstart', expect.any(Function))
-      
+
       wrapper.unmount()
     })
 
     it('should not attach listeners multiple times', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen multiple times
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
       eventListener?.(new Event('fullscreenchange'))
 
       // Should only attach once
       const activityListenerCalls = mockAddEventListener.mock.calls.filter(
-        call => call[0] === 'mousemove'
+        call => call[0] === 'mousemove',
       )
       expect(activityListenerCalls).toHaveLength(1)
-      
+
       wrapper.unmount()
     })
   })
@@ -393,13 +393,13 @@ describe('useFullscreenControls', () => {
     it('should remove listeners when last consumer unmounts', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Verify the listener was added
       expect(mockAddEventListener).toHaveBeenCalledWith('fullscreenchange', expect.any(Function))
-      
+
       // Unmount the component
       wrapper.unmount()
-      
+
       // Verify the listener was removed
       expect(mockRemoveEventListener).toHaveBeenCalledWith('fullscreenchange', expect.any(Function))
     })
@@ -409,30 +409,30 @@ describe('useFullscreenControls', () => {
     it('should add fullscreen class when entering fullscreen', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       expect(document.documentElement.classList.add).toHaveBeenCalledWith('app-fullscreen')
-      
+
       wrapper.unmount()
     })
 
     it('should remove fullscreen class when exiting fullscreen', async () => {
       const { wrapper } = createTestComponent()
       await wrapper.vm.$nextTick()
-      
+
       // Enter fullscreen
       document.fullscreenElement = document.documentElement
       const eventListener = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'fullscreenchange'
+        call => call[0] === 'fullscreenchange',
       )?.[1]
-      
+
       eventListener?.(new Event('fullscreenchange'))
 
       // Exit fullscreen
@@ -440,7 +440,7 @@ describe('useFullscreenControls', () => {
       eventListener?.(new Event('fullscreenchange'))
 
       expect(document.documentElement.classList.remove).toHaveBeenCalledWith('app-fullscreen')
-      
+
       wrapper.unmount()
     })
   })
