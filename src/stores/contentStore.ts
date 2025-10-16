@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useMediaControlsStore } from './mediaControls'
+import { base64ToUtf8 } from '@/utils/text'
 
 type PageModelEncoded = {
   time: number
@@ -21,6 +22,7 @@ const videoSource = isDev ? '/dev.mp4' : '#{videoSourcePath}'
 const pageModelDataPath = isDev ? '/dev.data' : ''
 const pageModelData = isDev ? '' : '#{pageModelData}'
 
+
 export const useContentStore = defineStore('content', {
   state: () => ({
     lastQuery: '' as string,
@@ -36,7 +38,7 @@ export const useContentStore = defineStore('content', {
       let encodedModel: PageModelEncoded[]
 
       if (isDev) {
-        // In development mode, load from dev.data file
+        // In development mode, load from the dev.data file
         try {
           const response = await fetch(pageModelDataPath)
           const data = await response.text()
@@ -57,7 +59,7 @@ export const useContentStore = defineStore('content', {
       this.pageModel = encodedModel.map((item: PageModelEncoded): PageModel => ({
         timestamp: item.time, // time is not base64 encoded
         image: item.thumb, // PNG format with data URL prefix
-        text: (item.text && item.text.length > 0) ? atob(item.text) : '', // Decode base64 text
+        text: (item.text && item.text.length > 0) ? base64ToUtf8(item.text) : '', // Decode base64 text as UTF-8
       }))
     },
     setMatchesTotal(total: number) {
