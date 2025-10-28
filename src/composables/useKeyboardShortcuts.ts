@@ -32,7 +32,7 @@ export function useKeyboardShortcuts(showShortcutsDialog?: () => void) {
       handler: () => {
         mediaStore.togglePlayPause()
       },
-      description: 'Play/Pause video',
+      description: 'Play/Pause',
     },
 
     // Navigation shortcuts

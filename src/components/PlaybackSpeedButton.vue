@@ -52,7 +52,7 @@ function setSpeed(speed: number) {
     <div
       tabindex="0"
       role="button"
-      class="btn btn-ghost m-1 w-10 h-10 p-0"
+      class="btn btn-ghost w-10 h-10 p-0"
       :title="`Playback speed: ${currentLabel}`"
     >
       <button class="btn btn-ghost w-10 h-10 p-0">

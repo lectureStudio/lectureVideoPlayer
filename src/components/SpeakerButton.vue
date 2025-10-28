@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import RangeSlider from '@/components/RangeSlider.vue'
+import { useShortcutTooltip } from '@/composables/useShortcutTooltip.ts'
 import { useMediaControlsStore } from '@/stores/mediaControls'
 import { computed } from 'vue'
 
 const media = useMediaControlsStore()
+
+// Tooltip composable for mute/unmute
+const muteTooltip = computed(() =>
+  useShortcutTooltip('mute', {
+    conditionalText: media.muted ? 'Unmute' : 'Mute',
+  })
+)
 
 /**
  * Two-way binding for the volume level (0-100).
@@ -42,7 +50,7 @@ function toggleMute() {
 
 <template>
   <div class="hidden md:inline-block dropdown dropdown-top dropdown-start">
-    <div tabindex="0" role="button" class="btn btn-ghost m-1 w-10 h-10 p-0">
+    <div tabindex="0" role="button" class="btn btn-ghost w-10 h-10 p-0">
       <AppIcon :name="iconName" class="w-6" />
     </div>
     <div
@@ -50,13 +58,19 @@ function toggleMute() {
       class="dropdown-content bg-slate-50/30 dark:bg-slate-700/30 backdrop-blur-sm dark:backdrop-blur-lg rounded-box z-1 p-1 shadow-sm w-56"
     >
       <div class="px-1 py-2 flex items-center justify-center gap-3">
-        <button
-          class="btn btn-ghost w-8 h-8 p-0"
-          @click="toggleMute"
-          title="Mute / Unmute"
+        <AppTooltip
+          :content="muteTooltip.tooltipContent.value"
+          :rich-content="true"
+          :show-arrow="false"
+          placement="top"
         >
-          <AppIcon :name="iconName" class="w-5 opacity-90" />
-        </button>
+          <button
+            class="btn btn-ghost w-8 h-8 p-0"
+            @click.stop="toggleMute"
+          >
+            <AppIcon :name="iconName" class="w-5 opacity-90" />
+          </button>
+        </AppTooltip>
         <RangeSlider
           :min="0"
           :max="100"

@@ -1,4 +1,8 @@
 import MediaControlsBar from '@/components/MediaControlsBar.vue'
+import { useFullscreenControls } from '@/composables/useFullscreenControls'
+import { usePlayerControls } from '@/composables/usePlayerControls'
+import { useTimeFormat } from '@/composables/useTimeFormat'
+import { useMediaControlsStore } from '@/stores/mediaControls'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -66,10 +70,14 @@ vi.mock('@/components/SidebarPositionChooser.vue', () => ({
   },
 }))
 
-import { useFullscreenControls } from '@/composables/useFullscreenControls'
-import { usePlayerControls } from '@/composables/usePlayerControls'
-import { useTimeFormat } from '@/composables/useTimeFormat'
-import { useMediaControlsStore } from '@/stores/mediaControls'
+// Mock the AppTooltip component
+vi.mock('@/components/AppTooltip.vue', () => ({
+  default: {
+    name: 'AppTooltip',
+    template: '<div class="app-tooltip"><slot /></div>',
+    props: ['content', 'richContent', 'showArrow', 'placement', 'offset', 'dropdownOpen'],
+  },
+}))
 
 describe('MediaControlsBar', () => {
   let mockMediaStore: ReturnType<typeof useMediaControlsStore>
@@ -335,7 +343,19 @@ describe('MediaControlsBar', () => {
     it('should call toggleFullscreen when fullscreen button is clicked', async () => {
       const wrapper = mount(MediaControlsBar)
 
-      const fullscreenButton = wrapper.find('button[aria-label="Enter fullscreen"]')
+      // Find the fullscreen button wrapped in AppTooltip
+      const fullscreenButton = wrapper.find('.app-tooltip button[aria-label="Fullscreen"]')
+
+      if (!fullscreenButton.exists()) {
+        // Fallback: find any button with fullscreen aria-label
+        const fullscreenButton2 = wrapper.find('button[aria-label="Fullscreen"]')
+        if (fullscreenButton2.exists()) {
+          await fullscreenButton2.trigger('click')
+          expect(mockFullscreenControls.toggleFullscreen).toHaveBeenCalled()
+          return
+        }
+      }
+
       await fullscreenButton.trigger('click')
 
       expect(mockFullscreenControls.toggleFullscreen).toHaveBeenCalled()
@@ -345,7 +365,7 @@ describe('MediaControlsBar', () => {
       mockFullscreenControls.fullscreen.value = false
       const wrapper = mount(MediaControlsBar)
 
-      const fullscreenButton = wrapper.find('button[aria-label="Enter fullscreen"]')
+      const fullscreenButton = wrapper.find('button[aria-label="Fullscreen"]')
       expect(fullscreenButton.exists()).toBe(true)
 
       mockFullscreenControls.fullscreen.value = true
