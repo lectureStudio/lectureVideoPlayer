@@ -7,6 +7,7 @@
     "dev": "vite --host",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "prepare": "husky",
     "lint": "eslint . --fix",
     "format": "dprint fmt",
     "format:check": "dprint check",
@@ -14,10 +15,18 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
+  "lint-staged": {
+    "**/*.{ts,vue,css,md}": [
+      "eslint --fix",
+      "dprint fmt"
+    ]
+  },
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
     "@fluentui/svg-icons": "^1.1.313",
     "daisyui": "^5.3.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.16",
     "vue": "^3.5.22",
