@@ -20,13 +20,29 @@ const position = computed<SidebarPosition>({
 
 <template>
   <div class="dropdown dropdown-top dropdown-end">
-    <div tabindex="0" role="button" class="btn btn-ghost m-1 w-10 h-10 p-0">
+    <div tabindex="0" role="button" class="btn btn-ghost w-10 h-10 p-0">
       <AppIcon name="sidebar-settings" class="w-6" />
     </div>
     <ul
       tabindex="0"
       class="dropdown-content menu bg-slate-50/30 dark:bg-slate-700/30 backdrop-blur-sm dark:backdrop-blur-lg rounded-box z-1 w-40 p-2 shadow-sm"
     >
+      <li>
+        <a
+            :class="{ active: position === 'left' }"
+            @click.prevent="position = 'left'"
+        >
+          <input
+              type="radio"
+              name="sidebarPosition"
+              class="radio radio-xs"
+              v-model="position"
+              value="left"
+          />
+          Left
+          <AppIcon name="sidebar-left" class="w-6" />
+        </a>
+      </li>
       <li>
         <a
           :class="{ active: position === 'right' }"
@@ -41,22 +57,6 @@ const position = computed<SidebarPosition>({
           />
           Right
           <AppIcon name="sidebar-right" class="w-6" />
-        </a>
-      </li>
-      <li>
-        <a
-          :class="{ active: position === 'left' }"
-          @click.prevent="position = 'left'"
-        >
-          <input
-            type="radio"
-            name="sidebarPosition"
-            class="radio radio-xs"
-            v-model="position"
-            value="left"
-          />
-          Left
-          <AppIcon name="sidebar-left" class="w-6" />
         </a>
       </li>
       <li>

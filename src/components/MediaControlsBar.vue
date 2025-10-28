@@ -5,10 +5,11 @@ import { useFullscreenControls } from '@/composables/useFullscreenControls'
 import { usePlayerControls } from '@/composables/usePlayerControls'
 import { useTimeFormat } from '@/composables/useTimeFormat'
 import { useMediaControlsStore } from '@/stores/mediaControls'
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
 import RangeSlider from './RangeSlider.vue'
 import SidebarPositionChooser from './SidebarPositionChooser.vue'
 import SpeakerButton from './SpeakerButton.vue'
+import {mediaPlayerTooltips, useShortcutTooltip} from "@/composables/useShortcutTooltip.ts";
 
 const { selectPrevPage, selectNextPage } = usePlayerControls()
 const media = useMediaControlsStore()
@@ -17,6 +18,21 @@ const { fullscreen, controlsVisible, toggleFullscreen, onUserActivity } =
   useFullscreenControls()
 
 const { formatHHMMSS } = useTimeFormat()
+
+// References to dropdown components
+const speakerButtonRef = ref()
+const playbackSpeedButtonRef = ref()
+const sidebarPositionChooserRef = ref()
+
+// Tooltip composables
+const previousPageTooltip = mediaPlayerTooltips.previous()
+const playPauseTooltip = computed(() =>
+    useShortcutTooltip('play/pause', {
+      conditionalText: media.playbackState === 'playing' ? 'Pause' : 'Play',
+    })
+)
+const nextPageTooltip = mediaPlayerTooltips.next()
+const fullscreenTooltip = mediaPlayerTooltips.fullscreen()
 
 /** Formatted current playback time. */
 const currentTime = computed(() => formatHHMMSS(media.currentTime))
@@ -121,53 +137,107 @@ const togglePlayPause = () => {
     <!-- Second row -->
     <div class="flex items-center justify-between gap-2 m-1">
       <div class="flex items-center gap-2">
-        <SpeakerButton />
+        <AppTooltip
+            content="Volume"
+            :show-arrow="false"
+            :offset="36"
+            :dropdown-open="speakerButtonRef?.isDropdownOpen ?? false"
+        >
+          <SpeakerButton ref="speakerButtonRef" />
+        </AppTooltip>
       </div>
       <div class="flex items-center gap-2">
-        <button
-          @click="selectPrevPage"
-          class="btn btn-ghost w-10 h-10 p-0"
-          aria-label="Previous track"
-          type="button"
+        <AppTooltip
+            :content="previousPageTooltip.tooltipContent.value"
+            :rich-content="true"
+            :show-arrow="false"
+            :offset="36"
         >
-          <AppIcon name="previous" class="w-6" />
-        </button>
-        <button
-          @click="togglePlayPause"
-          class="btn btn-ghost w-10 h-10 p-0"
-          :aria-label="media.playbackState === 'playing' ? 'Pause' : 'Play'"
-          type="button"
+          <button
+              @click="selectPrevPage"
+              class="btn btn-ghost w-10 h-10 p-0"
+              aria-label="Previous track"
+              type="button"
+          >
+            <AppIcon name="previous" class="w-6" />
+          </button>
+        </AppTooltip>
+        <AppTooltip
+            :content="playPauseTooltip.tooltipContent.value"
+            :rich-content="true"
+            :show-arrow="false"
+            :offset="36"
         >
-          <AppIcon
-            :name="media.playbackState === 'playing' ? 'pause' : 'play'"
-            class="w-6"
-          />
-        </button>
-        <button
-          @click="selectNextPage"
-          class="btn btn-ghost w-10 h-10 p-0"
-          aria-label="Next track"
-          type="button"
+          <button
+              @click="togglePlayPause"
+              class="btn btn-ghost w-10 h-10 p-0"
+              :aria-label="media.playbackState === 'playing' ? 'Pause' : 'Play'"
+              type="button"
+          >
+            <AppIcon
+                :name="media.playbackState === 'playing'
+              ? 'pause'
+              : 'play'"
+                class="w-6"
+            />
+          </button>
+        </AppTooltip>
+        <AppTooltip
+            :content="nextPageTooltip.tooltipContent.value"
+            :rich-content="true"
+            :show-arrow="false"
+            :offset="36"
         >
-          <AppIcon name="next" class="w-6" />
-        </button>
+          <button
+              @click="selectNextPage"
+              class="btn btn-ghost w-10 h-10 p-0"
+              aria-label="Next track"
+              type="button"
+          >
+            <AppIcon name="next" class="w-6" />
+          </button>
+        </AppTooltip>
       </div>
       <div class="flex items-center gap-2">
-        <SidebarPositionChooser class="hidden lg:inline-block" />
-        <PlaybackSpeedButton />
-        <button
-          class="btn btn-ghost w-10 h-10 p-0"
-          :aria-label="fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
-          type="button"
-          @click="toggleFullscreen"
+        <AppTooltip
+            content="Preview position"
+            :show-arrow="false"
+            :offset="36"
+            :dropdown-open="sidebarPositionChooserRef?.isDropdownOpen ?? false"
         >
-          <AppIcon
-            :name="fullscreen
-            ? 'fullscreen-minimize'
-            : 'fullscreen-maximize'"
-            class="w-6"
+          <SidebarPositionChooser
+              ref="sidebarPositionChooserRef"
+              class="hidden lg:inline-block"
           />
-        </button>
+        </AppTooltip>
+        <AppTooltip
+            content="Playback speed"
+            :show-arrow="false"
+            :offset="36"
+            :dropdown-open="playbackSpeedButtonRef?.isDropdownOpen ?? false"
+        >
+          <PlaybackSpeedButton ref="playbackSpeedButtonRef" />
+        </AppTooltip>
+        <AppTooltip
+            :content="fullscreenTooltip.tooltipContent.value"
+            :rich-content="true"
+            :show-arrow="false"
+            :offset="36"
+        >
+          <button
+              class="btn btn-ghost w-10 h-10 p-0"
+              :aria-label="fullscreen ? 'Exit fullscreen' : 'Fullscreen'"
+              type="button"
+              @click="toggleFullscreen"
+          >
+            <AppIcon
+                :name="fullscreen
+              ? 'fullscreen-minimize'
+              : 'fullscreen-maximize'"
+                class="w-6"
+            />
+          </button>
+        </AppTooltip>
       </div>
     </div>
   </nav>

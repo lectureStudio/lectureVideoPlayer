@@ -1,4 +1,5 @@
 import AppIcon from '@/components/AppIcon.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { RecycleScroller } from 'vue-virtual-scroller'
@@ -13,6 +14,7 @@ const pinia = createPinia()
 
 // Register global components
 app.component('AppIcon', AppIcon)
+app.component('AppTooltip', AppTooltip)
 app.component('RecycleScroller', RecycleScroller)
 
 // Install plugins

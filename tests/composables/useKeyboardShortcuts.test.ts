@@ -105,7 +105,7 @@ describe('useKeyboardShortcuts', () => {
       const spaceShortcut = shortcuts.find(s => Array.isArray(s.keys) && s.keys.some(k => k.key === ' '))
 
       expect(spaceShortcut).toBeDefined()
-      expect(spaceShortcut?.description).toBe('Play/Pause video')
+      expect(spaceShortcut?.description).toBe('Play/Pause')
     })
 
     it('should register K key shortcut', () => {
@@ -120,7 +120,7 @@ describe('useKeyboardShortcuts', () => {
       const kShortcut = shortcuts.find(s => Array.isArray(s.keys) && s.keys.some(k => k.key === 'k'))
 
       expect(kShortcut).toBeDefined()
-      expect(kShortcut?.description).toBe('Play/Pause video')
+      expect(kShortcut?.description).toBe('Play/Pause')
     })
 
     it('should call togglePlayPause when space is pressed', () => {
