@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import RangeSlider from '@/components/RangeSlider.vue'
+import { useShortcutTooltip } from '@/composables/useShortcutTooltip.ts'
 import { useMediaControlsStore } from '@/stores/mediaControls'
 import { computed } from 'vue'
-import {useShortcutTooltip} from "@/composables/useShortcutTooltip.ts";
 
 const media = useMediaControlsStore()
 
 // Tooltip composable for mute/unmute
 const muteTooltip = computed(() =>
-    useShortcutTooltip('mute', {
-      conditionalText: media.muted ? 'Unmute' : 'Mute',
-    })
+  useShortcutTooltip('mute', {
+    conditionalText: media.muted ? 'Unmute' : 'Mute',
+  })
 )
 
 /**
@@ -59,14 +59,14 @@ function toggleMute() {
     >
       <div class="px-1 py-2 flex items-center justify-center gap-3">
         <AppTooltip
-            :content="muteTooltip.tooltipContent.value"
-            :rich-content="true"
-            :show-arrow="false"
-            placement="top"
+          :content="muteTooltip.tooltipContent.value"
+          :rich-content="true"
+          :show-arrow="false"
+          placement="top"
         >
           <button
-              class="btn btn-ghost w-8 h-8 p-0"
-              @click.stop="toggleMute"
+            class="btn btn-ghost w-8 h-8 p-0"
+            @click.stop="toggleMute"
           >
             <AppIcon :name="iconName" class="w-5 opacity-90" />
           </button>

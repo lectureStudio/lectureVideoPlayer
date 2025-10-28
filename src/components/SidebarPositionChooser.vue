@@ -29,15 +29,15 @@ const position = computed<SidebarPosition>({
     >
       <li>
         <a
-            :class="{ active: position === 'left' }"
-            @click.prevent="position = 'left'"
+          :class="{ active: position === 'left' }"
+          @click.prevent="position = 'left'"
         >
           <input
-              type="radio"
-              name="sidebarPosition"
-              class="radio radio-xs"
-              v-model="position"
-              value="left"
+            type="radio"
+            name="sidebarPosition"
+            class="radio radio-xs"
+            v-model="position"
+            value="left"
           />
           Left
           <AppIcon name="sidebar-left" class="w-6" />

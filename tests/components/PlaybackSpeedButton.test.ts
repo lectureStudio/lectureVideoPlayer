@@ -162,7 +162,7 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      await speedItems[2].trigger('click') // Click 0.75x
+      await speedItems[2]!.trigger('click') // Click 0.75x
 
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(0.75)
     })
@@ -173,13 +173,13 @@ describe('PlaybackSpeedButton', () => {
       const speedItems = wrapper.findAll('.step')
 
       // Test clicking different speeds
-      await speedItems[0].trigger('click') // 0.25x
+      await speedItems[0]!.trigger('click') // 0.25x
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(0.25)
 
-      await speedItems[3].trigger('click') // 1.0x (normal)
+      await speedItems[3]!.trigger('click') // 1.0x (normal)
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(1.0)
 
-      await speedItems[7].trigger('click') // 2.0x
+      await speedItems[7]!.trigger('click') // 2.0x
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(2.0)
     })
 
@@ -297,7 +297,7 @@ describe('PlaybackSpeedButton', () => {
       const wrapper = mountComponent()
 
       const speedItems = wrapper.findAll('.step')
-      await speedItems[4].trigger('click') // Click 1.25x
+      await speedItems[4]!.trigger('click') // Click 1.25x
 
       expect(mockMediaStore.setPlaybackSpeed).toHaveBeenCalledWith(1.25)
     })
